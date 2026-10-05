@@ -1,9 +1,9 @@
-//Progetto 
+//Progect 2
 #include <avr/io.h>
 #include <util/delay.h>
 
 int main(void) {
-    // Imposta PB7 come uscita (pin 13 sull'Arduino Mega 2560)
+    // Port configuration
     DDRF = 0b00011100;
 
     while (1) {
