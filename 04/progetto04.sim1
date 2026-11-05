@@ -24,6 +24,8 @@
 
 <item itemtype="Resistor" CircId="Resistor-13" mainComp="false" ShowProp="Resistance" Show_id="false" Show_Val="true" Pos="-68,-20" rotation="0" hflip="1" vflip="1" label="Resistor-13" idLabPos="-16,-24" labelrot="0" valLabPos="-16,6" valLabRot="0" Resistance="220 Ω" />
 
+<item itemtype="Led" CircId="Led-19" mainComp="false" Show_id="false" Show_Val="false" Pos="104,-116" rotation="0" hflip="1" vflip="1" label="Led-19" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Color="Yellow" Grounded="false" Threshold="2.4 V" MaxCurrent="30 mA" Resistance="0.6 Ω" />
+
 <item itemtype="Node" CircId="Node-14" mainComp="false" Pos="12,-60" />
 
 <item itemtype="Node" CircId="Node-15" mainComp="false" Pos="60,-60" />
@@ -58,8 +60,6 @@
 
 <item itemtype="Connector" uid="Connector-29" startpinid="Resistor-13-rPin" endpinid="Node-17-1" pointList="-52,-20,-52,4" />
 
-<item itemtype="Connector" uid="Connector-30" startpinid="Node-15-1" endpinid="Node-17-0" pointList="60,-60,60,4,-52,4" />
-
 <item itemtype="Connector" uid="Connector-32" startpinid="Mega-1-A4" endpinid="Led-4-lPin" pointList="-140,-52,-68,-52,-68,-112" />
 
 <item itemtype="Connector" uid="Connector-33" startpinid="Resistor-10-rPin" endpinid="Node-18-1" pointList="-32,-60,-32,-60" />
@@ -69,5 +69,7 @@
 <item itemtype="Connector" uid="Connector-35" startpinid="Node-18-2" endpinid="Node-14-0" pointList="-32,-60,12,-60" />
 
 <item itemtype="Connector" uid="Connector-31" startpinid="Node-17-2" endpinid="Mega-1-GND1" pointList="-52,4,-140,4" />
+
+<item itemtype="Connector" uid="Connector-30" startpinid="Node-15-1" endpinid="Node-17-0" pointList="60,-60,60,4,-52,4" />
 
 </circuit>

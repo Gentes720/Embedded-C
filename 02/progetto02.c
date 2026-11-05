@@ -8,7 +8,7 @@ int main(void) {
 
     while (1) {
         _delay_ms(500);
-        PORTF = 0b00000100;
+        PORTF = 0b00000100; // Port Manipulation
         _delay_ms(500);
         PORTF = 0b00001000;
         _delay_ms(500);
