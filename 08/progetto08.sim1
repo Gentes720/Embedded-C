@@ -1,19 +1,41 @@
-<circuit version="1.1.0-SR2" rev="260411" stepSize="1000000" stepsPS="1000000" NLsteps="100000" reaStep="1000000" animate="0" >
+<circuit version="1.1.0-SR2" rev="260411" stepSize="1000000" stepsPS="1000000" NLsteps="100000" reaStep="1000000" animate="1" >
 
-<item itemtype="Subcircuit" CircId="Mega-1" mainComp="false" Show_id="true" Show_Val="false" Pos="-176,-108" rotation="0" hflip="1" vflip="1" label="Mega-1" idLabPos="0,-20" labelrot="0" valLabPos="-16,20" valLabRot="0" Logic_Symbol="false">
+<item itemtype="Subcircuit" CircId="Mega-1" mainComp="false" Show_id="true" Show_Val="false" Pos="-176,-104" rotation="0" hflip="1" vflip="1" label="Mega-1" idLabPos="0,-20" labelrot="0" valLabPos="-16,20" valLabRot="0" Logic_Symbol="false">
 <mainCompProps MainCompId="mega2560-63" Frequency="16 MHz" Program="../../../PlatformIO/Projects/Test/.pio/build/megaatmega2560/firmware.hex" Auto_Load="true" saveEepr="true" MainMcu="true" SerialMon="-1" />
 </item>
 
-<item itemtype="Push" CircId="Push-2" mainComp="false" Show_id="false" Show_Val="false" Pos="92,-148" rotation="0" hflip="1" vflip="1" label="Push-2" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Norm_Close="false" Poles="1" />
+<item itemtype="Push" CircId="Push-2" mainComp="false" Show_id="false" Show_Val="false" Pos="76,-4" rotation="0" hflip="1" vflip="1" label="Push-2" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Norm_Close="false" Poles="1" />
 
-<item itemtype="SerialTerm" CircId="SerialTerm-9" mainComp="false" Show_id="false" Show_Val="false" Pos="-292,-56" rotation="0" hflip="1" vflip="1" label="SerialTerm-9" idLabPos="-20,-32" labelrot="0" valLabPos="-16,20" valLabRot="0" Baudrate="9600 _Bd" DataBits="8 _bits" StopBits="1 _bits" SerialMon="false" />
+<item itemtype="Led" CircId="Led-11" mainComp="false" Show_id="false" Show_Val="false" Pos="24,44" rotation="0" hflip="1" vflip="1" label="Led-11" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Color="Yellow" Grounded="false" Threshold="2.4 V" MaxCurrent="30 mA" Resistance="0.6 Ω" />
 
-<item itemtype="Connector" uid="Connector-27" startpinid="Push-2-pinP0" endpinid="Mega-1-47" pointList="76,-148,-64,-148,-64,-92" />
+<item itemtype="Led" CircId="Led-12" mainComp="false" Show_id="false" Show_Val="false" Pos="24,68" rotation="0" hflip="1" vflip="1" label="Led-12" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Color="Yellow" Grounded="false" Threshold="2.4 V" MaxCurrent="30 mA" Resistance="0.6 Ω" />
 
-<item itemtype="Connector" uid="Connector-28" startpinid="Push-2-switch0pinN" endpinid="Mega-1-GND1" pointList="108,-148,108,84,-24,84" />
+<item itemtype="Resistor" CircId="Resistor-13" mainComp="false" ShowProp="Resistance" Show_id="false" Show_Val="true" Pos="76,44" rotation="0" hflip="1" vflip="1" label="Resistor-13" idLabPos="-16,-24" labelrot="0" valLabPos="-10.0754,4.63278" valLabRot="0" Resistance="220 Ω" />
 
-<item itemtype="Connector" uid="Connector-36" startpinid="SerialTerm-9-pin0" endpinid="Mega-1-19" pointList="-316,-64,-316,-100,-192,-100,-192,-44,-168,-44" />
+<item itemtype="Resistor" CircId="Resistor-14" mainComp="false" ShowProp="Resistance" Show_id="false" Show_Val="true" Pos="76,68" rotation="0" hflip="1" vflip="1" label="Resistor-14" idLabPos="-16,-24" labelrot="0" valLabPos="-10.5311,4.63278" valLabRot="0" Resistance="220 Ω" />
 
-<item itemtype="Connector" uid="Connector-37" startpinid="Mega-1-18" endpinid="SerialTerm-9-pin1" pointList="-168,-36,-316,-36,-316,-48" />
+<item itemtype="Node" CircId="Node-16" mainComp="false" Pos="108,68" />
+
+<item itemtype="Node" CircId="Node-18" mainComp="false" Pos="108,44" />
+
+<item itemtype="Connector" uid="Connector-42" startpinid="Resistor-13-lPin" endpinid="Led-11-rPin" pointList="60,44,40,44" />
+
+<item itemtype="Connector" uid="Connector-43" startpinid="Resistor-14-lPin" endpinid="Led-12-rPin" pointList="60,68,40,68" />
+
+<item itemtype="Connector" uid="Connector-47" startpinid="Resistor-14-rPin" endpinid="Node-16-1" pointList="92,68,108,68" />
+
+<item itemtype="Connector" uid="Connector-49" startpinid="Node-16-2" endpinid="Mega-1-GND1" pointList="108,68,108,88,-24,88" />
+
+<item itemtype="Connector" uid="Connector-50" startpinid="Led-12-lPin" endpinid="Mega-1-A0" pointList="8,68,-4,68,-4,64,-24,64" />
+
+<item itemtype="Connector" uid="Connector-51" startpinid="Led-11-lPin" endpinid="Mega-1-A1" pointList="8,44,-4,44,-4,56,-24,56" />
+
+<item itemtype="Connector" uid="Connector-57" startpinid="Push-2-switch0pinN" endpinid="Node-18-1" pointList="92,-4,108,-4,108,44" />
+
+<item itemtype="Connector" uid="Connector-58" startpinid="Resistor-13-rPin" endpinid="Node-18-0" pointList="92,44,108,44" />
+
+<item itemtype="Connector" uid="Connector-59" startpinid="Node-18-2" endpinid="Node-16-0" pointList="108,44,108,68" />
+
+<item itemtype="Connector" uid="Connector-74" startpinid="Mega-1-49" endpinid="Push-2-pinP0" pointList="-56,-88,60,-88,60,-4" />
 
 </circuit>

@@ -1,76 +1,94 @@
-// Project 8
+// PROJECT 8
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include <util/delay.h>
-#include <stdio.h>
+#include <stdint.h> 
 
-int uart1_putchar(char c, FILE *stream) {
-    (void)stream;
-    if (c == '\n') {
-        uart1_putchar('\r', NULL);
-    }
-    // CORRECTION : On utilise UCSR1A et UDRE1 pour l'USART1
-    while (!(UCSR1A & (1 << UDRE1))) {}
-    UDR1 = c; // Envoie sur le registre de l'USART1
-    return 0;
-}
 
-FILE uart1_output = FDEV_SETUP_STREAM(uart1_putchar, NULL, _FDEV_SETUP_WRITE);
+volatile uint16_t first_capture = 0;
+volatile uint16_t second_capture = 0;
+volatile uint16_t overflow_count = 0;
+volatile uint8_t was_pressed = 0;
+volatile uint8_t mesure_flag = 0;
 
-void uart1_init(void) {
-    UBRR1H = 0;
-    UBRR1L = 103; // 9600 bauds pour un clock de 16MHz
-    UCSR1B |= (1 << TXEN1); // Active l'émetteur de l'USART1
-    stdout = &uart1_output;  
-}
-
-void timer1BConfig(void){
+void timer4_init(void) {
+    // Prescaler 1024 + Noise canceler
+    TCCR4B |= (1 << ICNC4) | (1 << CS42) | (1 << CS40);
     
-    TCCR1B |= (1 << CS12) | (1 << CS10) | (1 << ICNC1) ;  // 1 0 1 for prescaler 1024, electric noise cancellation
-
-    TIMSK1 |= (1 << ICIE1); //enable interrupt
+    // Enable input capture AND overflow interrupts
+    TIMSK4 |= (1 << ICIE4) | (1 << TOIE4);
+    // TOIE4 : autorise interruption sur overflow
 }
 
-void push_buttonConfig(void){
-    DDRD &= ~(1 << PD4); 
-    PORTD |= (1 << PD4);
+void components_init(void){
+    // LED as output
+    DDRF |= (1 << PF0) | (1 << PF1);
+    // button as input
+    DDRL &= ~(1 << PL0);// set PL0 as input
+    PORTL |= (1 << PL0); // enable pull-up resistor
 }
 
-volatile uint8_t time_ready = 0;
-volatile uint16_t t_press = 0;
-volatile uint16_t t_up = 0; 
-volatile uint32_t total_time =0;
 
-ISR(TIMER1_CAPT_vect){
-    if (!(TCCR1B & (1 << ICES1))) { // if falling edge
-        t_press = ICR1;
-        TCCR1B |= (1 << ICES1); // trigger rising edge
+ISR(TIMER4_OVF_vect) {
+    overflow_count++;  // Compter les overflows
+}
+
+ISR(TIMER4_CAPT_vect) {
+    uint16_t capture_value = ICR4;
+    
+    if (was_pressed == 0) {
+        // Premier front : APPUI (front descendant, ICES4=0)
+        first_capture = capture_value;
+        
+        // Flip ICES4 : prochain front sera MONTANT (relâchement)
+        TCCR4B ^= (1 << ICES4);
+        
+        was_pressed = 1;
     } else {
-        t_up = ICR1;
-        TCCR1B &= ~(1 << ICES1); // trigger falling edge again
-
-        uint16_t pulse_count = t_up - t_press;
-        total_time = ((uint32_t)pulse_count * 64) / 1000;// 64micro seconds per pulse for prescaler 1024
-
-        time_ready = 1; 
+        // Deuxième front : RELÂCHEMENT (front montant, ICES4=1)
+        second_capture = capture_value;
+        
+        // Flip ICES4 : prochain front sera DESCENDANT (appui)
+        TCCR4B ^= (1 << ICES4);
+        
+        mesure_flag = 1;
+        was_pressed = 0;
     }
 }
 
-
-int main(void){
-    uart1_init();
-    timer1BConfig();
-    push_buttonConfig();
-
-    sei(); 
-
-    while (1)
-    {
-        if (time_ready){
-            time_ready = 0;
-            printf("The button press duration is %lu milliseconds \n", total_time);
+int main(void) {
+    components_init();
+    timer4_init();
+    sei();
+    
+    while(1) {
+        if (mesure_flag) {
+            mesure_flag = 0;
+            
+            
+            // Section critique : copie atomique
+            uint16_t local_first, local_second, local_overflow;
+            cli();
+            local_first = first_capture;
+            local_second = second_capture;
+            local_overflow = overflow_count;
+            sei();
+            
+            // Calcul avec cast explicite
+            uint32_t ticks = ((uint32_t)local_overflow * 65536UL) 
+                           + (uint32_t)local_second 
+                           - (uint32_t)local_first;
+                           
+            uint32_t time_ms = (ticks * 64UL) / 1000UL;
+            
+            if (time_ms < 300) {
+                PORTF |= (1 << PF0);   // LED courte
+                PORTF &= ~(1 << PF1);
+            } else {
+                PORTF |= (1 << PF1);   // LED longue
+                PORTF &= ~(1 << PF0);
+            }
+            overflow_count = 0;
         }
     }
-    
 }
